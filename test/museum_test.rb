@@ -50,6 +50,13 @@ class MuseumTest < Minitest::Test
   end
 
   def test_museum_can_list_patrons_that_have_been_admitted
+    @dmns.admit(@bob)
+    @dmns.admit(@sally)
+
+    assert_equal [@bob, @sally], @dmns.patrons
+  end
+
+  def test_museum_can_list_patrons_by_exhibit_interest
     @dmns.add_exhibit(@gems_and_minerals)
     @dmns.add_exhibit(@dead_sea_scrolls)
     @dmns.add_exhibit(@imax)
@@ -58,8 +65,9 @@ class MuseumTest < Minitest::Test
     @sally.add_interest("Dead Sea Scrolls")
     @dmns.admit(@bob)
     @dmns.admit(@sally)
-
-    assert_equal [@bob, @sally], @dmns.patrons
+    # require "pry"; binding.pry
+    assert_instance_of Hash, @dmns.patrons_by_exhibit_interest
+    assert_equal 3, @dmns.patrons_by_exhibit_interest.count
+    assert_equal [], @dmns.patrons_by_exhibit_interest[@imax]
   end
-
 end
