@@ -14,10 +14,7 @@ class MuseumTest < Minitest::Test
     @imax = Exhibit.new("IMAX", 15)
 
     @bob = Patron.new("Bob", 20)
-    @bob.add_interest("Dead Sea Scrolls")
-    @bob.add_interest("Gems and Minerals")
     @sally = Patron.new("Sally", 20)
-    @sally.add_interest("IMAX")
   end
 
   def test_it_exists
@@ -44,7 +41,25 @@ class MuseumTest < Minitest::Test
     @dmns.add_exhibit(@gems_and_minerals)
     @dmns.add_exhibit(@dead_sea_scrolls)
     @dmns.add_exhibit(@imax)
+    @bob.add_interest("Dead Sea Scrolls")
+    @bob.add_interest("Gems and Minerals")
+    @sally.add_interest("IMAX")
+
     assert_equal [@gems_and_minerals, @dead_sea_scrolls], @dmns.recommend_exhibits(@bob)
     assert_equal [@imax], @dmns.recommend_exhibits(@sally)
   end
+
+  def test_museum_can_list_patrons_that_have_been_admitted
+    @dmns.add_exhibit(@gems_and_minerals)
+    @dmns.add_exhibit(@dead_sea_scrolls)
+    @dmns.add_exhibit(@imax)
+    @bob.add_interest("Dead Sea Scrolls")
+    @bob.add_interest("Gems and Minerals")
+    @sally.add_interest("Dead Sea Scrolls")
+    @dmns.admit(@bob)
+    @dmns.admit(@sally)
+
+    assert_equal [@bob, @sally], @dmns.patrons
+  end
+
 end
